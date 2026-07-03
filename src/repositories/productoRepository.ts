@@ -3,24 +3,28 @@ import { CrearProducto, Producto } from '../types/index.js'
 //SIMULANDO LA BD xq no tengo conexion 
     let productos: Producto[]
 
-    productos = [
-        {
-            id: 1,
-            nombre: "Pan",
-            precioUnitario: 2800,
-        },
-        {
-            id: 2,
-            nombre: "Cuadradita",
-            precioUnitario: 3000
-        },
-        {
-            id: 3,
-            nombre: "Factura",
-            precioUnitario: 700
-        },
-    ]
+    // productos = [
+    //     {
+    //         id: 1,
+    //         nombre: "Pan",
+    //         precioUnitario: 2800,
+    //     },
+    //     {
+    //         id: 2,
+    //         nombre: "Cuadradita",
+    //         precioUnitario: 3000
+    //     },
+    //     {
+    //         id: 3,
+    //         nombre: "Factura",
+    //         precioUnitario: 700
+    //     },
+    // ]
+    productos= []
 
+export async function obtenerProductos() {
+    return productos
+}
 
 export async function obtenerProducto(id:number) {
 

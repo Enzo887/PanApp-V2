@@ -2,6 +2,11 @@ import { type Request, type Response } from "express";
 import * as productoService from '../services/productoService.js'
 import { CrearProducto, Producto } from '../types/index.js'
 
+interface CrearProductoResponse {
+    msj: string;
+    producto: Producto;
+}
+
 export async function cargarPantalla(req: Request, res: Response){
     res.status(200).json("estas viendo la pantalla de productos");
 }
@@ -31,24 +36,39 @@ export async function obtenerProducto(req: Request<{id: number}>, res: Response)
     }
 }
 
-export async function crearProducto(
-    req: Request<{}, {msj: string}, CrearProducto>,
-    res: Response< {msj: string} | { error: string } | { producto: Producto } >) {
+export async function obtenerProductos(
+    req: Request,
+    res: Response<{productos: Producto[]} | {error: string}>) {
     try {
-        const {nombre, precioUnitario} = req.body
-        console.log(nombre, precioUnitario)
+        const productos = await productoService.obtenerProductos()
+        res.json({
+            productos: productos
+        })    
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Error desconocido';
+        res.status(500).json({
+            error: message
+        })
+    }
+}
+
+export async function crearProducto(
+    req: Request<{},{}, CrearProducto>,
+    res: Response< CrearProductoResponse | { error: string }>) {
+    try {
         
-        const productoCreado = await productoService.crearProducto({nombre, precioUnitario})
+        const productoCreado = await productoService.crearProducto(req.body)
 
         res.status(200).json({
             msj: 'Se creo correctamente el producto',
             producto: productoCreado
 
         })
-    } catch (err: any) {
-        console.log(err.message)
-        res.status(404).json({
-            error: err.message
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Error desconocido';
+        console.log(message)
+        res.status(500).json({  
+            error: message
         })
     }
 }

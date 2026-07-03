@@ -13,7 +13,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/cuenta', cuentaRouter);
-app.use('/producto', productoRouter);
+app.use('/productos', productoRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

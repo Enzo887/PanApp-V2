@@ -10,3 +10,7 @@ export async function crearProducto(producto: CrearProducto) {
 
     return await productoRepository.crearProducto(producto);
 }
+
+export async function obtenerProductos() {
+    return await productoRepository.obtenerProductos();
+}
