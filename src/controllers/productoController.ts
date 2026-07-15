@@ -1,39 +1,10 @@
 import { type Request, type Response } from "express";
 import * as productoService from '../services/productoService.js'
-import { CrearProducto, Producto } from '../types/index.js'
+import { ProductoBody, Producto } from '../types/index.js'
 
 interface CrearProductoResponse {
     msj: string;
     producto: Producto;
-}
-
-export async function cargarPantalla(req: Request, res: Response){
-    res.status(200).json("estas viendo la pantalla de productos");
-}
-
-export async function obtenerProducto(req: Request<{id: number}>, res: Response){
-    try {
-        const { id } = req.params;
-        //llamar al productoService
-        const producto = await productoService.obtenerProducto(id);
-        
-        //retornar si hay productos o no
-        // if(!producto){
-        //     res.json({
-        //         error: `No hay producto con el id ${id}`
-        //     })        
-        // } creo que esto es innecesario xq si no existe y hago un throw error iria al catch y de ahi me manejo en el front
-
-        res.status(200).json({
-            data: producto
-        })
-        
-    } catch (err: any) {
-        // console.error("[C] Error al obtener el producto");
-        res.status(500).json({
-            error: err.message
-        })
-    }
 }
 
 export async function obtenerProductos(
@@ -53,11 +24,11 @@ export async function obtenerProductos(
 }
 
 export async function crearProducto(
-    req: Request<{},{}, CrearProducto>,
+    req: Request,
     res: Response< CrearProductoResponse | { error: string }>) {
     try {
         
-        const productoCreado = await productoService.crearProducto(req.body)
+        const productoCreado = await productoService.crearProducto(res.locals.body as ProductoBody)
 
         res.status(200).json({
             msj: 'Se creo correctamente el producto',
@@ -66,8 +37,27 @@ export async function crearProducto(
         })
     } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Error desconocido';
-        console.log(message)
         res.status(500).json({  
+            error: message
+        })
+    }
+}
+
+export async function actualizarProducto(
+    req: Request<{id: string}, {}, ProductoBody>, 
+    res: Response<ProductoBody | {error: string}>) {
+    try {
+        
+        const {id} = req.params
+        const productoEditado = await productoService.actualizarProducto(id, req.body)
+
+        // res.status(200).json({
+        //     producto: productoEditado
+        // })
+        
+    } catch (err) {
+        const message= err instanceof Error ? err.message : 'Error no encontrado'
+        res.status(500).json({
             error: message
         })
     }

@@ -1,6 +1,8 @@
 import express, { type Request, type Response } from 'express';
 import {cuentaRouter} from './routes/cuentaRouter.js'
 import { productoRouter } from './routes/productosRouter.js';
+import "dotenv/config";
+
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 

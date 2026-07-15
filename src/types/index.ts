@@ -1,17 +1,16 @@
-type tipoUnidad = {
-    // peso: string,
-    // unidad:string
-}
+//es para usarlo en zod
+export const MEDICIONES = ['kg', 'unidad'] as const;
+
+export type medicion = typeof MEDICIONES[number];
 
 export interface Producto{
     id: number,
     nombre: string,
-    precioUnitario: number
-    // ,
-    // unidad: tipoUnidad
+    precio: number,
+    tipo_medicion: medicion,
+    activo: boolean
 }
-
-export type CrearProducto = Omit<Producto, 'id'>
+export type ProductoBody = Omit<Producto, 'id' | 'activo'>
 
 // export interface Ingreso{
 //     // id: number,
