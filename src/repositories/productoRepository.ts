@@ -3,18 +3,24 @@ import { supabase } from './db/supabase.js';
 
 
 export async function crearProducto(producto: ProductoBody) {
-    
-    const pAsignacion = {
-        id: 4,
-        activo:true,
-        ...producto,
+
+    const {data, error} = await supabase
+        .from('producto')
+        .insert({
+            nombre: producto.nombre,
+            precio: producto.precio,
+            tipo_medicion: producto.tipo_medicion
+        })
+        //para ver que se creó bien
+        // .select()
+        // .single()
+
+    if(error){
+        throw new Error(error.message)
     }
-        console.log(`[R] Producto Creado: ${pAsignacion.id}, ${pAsignacion.nombre}, ${pAsignacion.precioUnitario}`)
-
-    // productos.push(pAsignacion)
-
-    return pAsignacion;
-    
+    // console.log(`[R] Producto Creado: ${pAsignacion.id}, ${pAsignacion.nombre}, ${pAsignacion.precio}`)
+    console.log(data)
+    return data;    
 }
 
 export async function obtenerProductos() {

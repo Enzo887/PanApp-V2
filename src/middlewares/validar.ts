@@ -9,8 +9,7 @@ export function validar<T>(schema: z.ZodType<T>, segment: segment): RequestHandl
         
         if(!result.success){
             const flattened = z.flattenError(result.error);
-            res.status(400).json({
-                
+            res.status(400).json({  
                 errors: flattened
             })
             return;

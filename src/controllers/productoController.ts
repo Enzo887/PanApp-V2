@@ -4,7 +4,7 @@ import { ProductoBody, Producto } from '../types/index.js'
 
 interface CrearProductoResponse {
     msj: string;
-    producto: Producto;
+    // producto: Producto;
 }
 
 export async function obtenerProductos(
@@ -32,7 +32,7 @@ export async function crearProducto(
 
         res.status(200).json({
             msj: 'Se creo correctamente el producto',
-            producto: productoCreado
+            // producto: productoCreado
 
         })
     } catch (err: unknown) {
