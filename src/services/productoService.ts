@@ -16,3 +16,7 @@ export async function obtenerProductos() {
 export async function actualizarProducto(id:number, producto: ActualizarProductoBody) {
     return await productoRepository.actualizarProducto(id, producto)
 }
+
+export async function eliminarProducto(id: number) {
+    return await productoRepository.eliminarProducto(id)
+}

@@ -20,6 +20,10 @@ type ActualizarProductoLocals = {
   body: ActualizarProductoBody
 }
 
+type EliminarProductoLocals = {
+    params: { id: number }
+}
+
 export async function obtenerProductos(
     req: Request,
     res: Response<{productos: Producto[]} | {error: string}>) {
@@ -70,8 +74,28 @@ export async function actualizarProducto(
         })
     } catch (err) {
         const message= err instanceof Error ? err.message : 'Error no encontrado'
-        res.status(500).json({
+        res.status(404).json({
             error: message
         })
     }
+}
+
+export async function eliminarProducto(
+    req: Request,
+    res: Response<{ msj: string } | ErrorResponse, EliminarProductoLocals>
+) {
+    try {
+
+        const {id} = res.locals.params
+        await productoService.eliminarProducto(id)
+        res.status(204).json({
+            msj: "Producto eliminado correctamente"
+        })
+        
+    } catch (err) {
+        const message = err instanceof Error ? err.message : 'Error no encontrado'
+        res.status(404).json({
+            error: message
+        })
+    }    
 }

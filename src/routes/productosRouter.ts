@@ -9,4 +9,4 @@ productoRouter.post('/crear', validar(productoSchema.crear, 'body'), productoCon
 productoRouter.patch('/editar/:id',
     validar(productoSchema.obtener, 'params'),
     validar(productoSchema.actualizar, 'body'), productoController.actualizarProducto);
-// productoRouter.delete('/eliminar/:id', validar(productoSchema.obtener, 'params'), );
+productoRouter.delete('/eliminar/:id', validar(productoSchema.obtener, 'params'), productoController.eliminarProducto);
