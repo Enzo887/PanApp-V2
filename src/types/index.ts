@@ -10,7 +10,8 @@ export interface Producto{
     tipo_medicion: medicion,
     activo: boolean
 }
-export type ProductoBody = Omit<Producto, 'id' | 'activo'>
+export type CrearProductoBody = Omit<Producto, 'id' | 'activo'>
+export type ActualizarProductoBody = Partial<Omit<Producto, 'id'>>
 
 // export interface Ingreso{
 //     // id: number,

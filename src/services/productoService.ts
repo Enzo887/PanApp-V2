@@ -13,6 +13,6 @@ export async function obtenerProductos() {
     return await productoRepository.obtenerProductos();
 }
 
-export async function actualizarProducto(id:string, producto: ProductoBody) {
+export async function actualizarProducto(id:number, producto: ProductoBody) {
     return await productoRepository.actualizarProducto(id, producto)
 }

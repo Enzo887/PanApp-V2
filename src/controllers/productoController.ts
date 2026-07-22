@@ -1,10 +1,19 @@
 import { type Request, type Response } from "express";
 import * as productoService from '../services/productoService.js'
-import { ProductoBody, Producto } from '../types/index.js'
+import { CrearProductoBody, Producto, ActualizarProductoBody } from '../types/index.js'
 
-interface CrearProductoResponse {
+type ProductoResponse = {
     msj: string;
     // producto: Producto;
+}
+
+type CrearProductoLocals = {
+  body: CrearProductoBody
+}
+
+type ActualizarProductoLocals = {
+  params: { id: number }
+  body: ActualizarProductoBody
 }
 
 export async function obtenerProductos(
@@ -25,10 +34,10 @@ export async function obtenerProductos(
 
 export async function crearProducto(
     req: Request,
-    res: Response< CrearProductoResponse | { error: string }>) {
+    res: Response< ProductoResponse | { error: string }, CrearProductoLocals>) {
     try {
         
-        const productoCreado = await productoService.crearProducto(res.locals.body as ProductoBody)
+        const productoCreado = await productoService.crearProducto(res.locals.body)
 
         res.status(200).json({
             msj: 'Se creo correctamente el producto',
@@ -44,17 +53,16 @@ export async function crearProducto(
 }
 
 export async function actualizarProducto(
-    req: Request<{id: string}, {}, ProductoBody>, 
-    res: Response<ProductoBody | {error: string}>) {
+    req: Request, 
+    res: Response<ProductoResponse | {error: string}, ActualizarProductoLocals>) {
     try {
         
-        const {id} = req.params
-        const productoEditado = await productoService.actualizarProducto(id, req.body)
-
-        // res.status(200).json({
-        //     producto: productoEditado
-        // })
+        const {id} = res.locals.params
+        const productoEditado = await productoService.actualizarProducto(id, res.locals.body)
         
+        res.status(200).json({
+            msj: 'Se edito correctamente el producto'
+        })
     } catch (err) {
         const message= err instanceof Error ? err.message : 'Error no encontrado'
         res.status(500).json({
