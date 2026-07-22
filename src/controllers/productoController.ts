@@ -1,10 +1,14 @@
 import { type Request, type Response } from "express";
 import * as productoService from '../services/productoService.js'
-import { CrearProductoBody, Producto, ActualizarProductoBody } from '../types/index.js'
+import { Producto, CrearProductoBody, ActualizarProductoBody } from '../types/index.js'
 
 type ProductoResponse = {
     msj: string;
-    // producto: Producto;
+    producto: Producto;
+}
+
+type ErrorResponse = {
+    error: string
 }
 
 type CrearProductoLocals = {
@@ -34,14 +38,14 @@ export async function obtenerProductos(
 
 export async function crearProducto(
     req: Request,
-    res: Response< ProductoResponse | { error: string }, CrearProductoLocals>) {
+    res: Response< ProductoResponse | ErrorResponse, CrearProductoLocals>) {
     try {
         
         const productoCreado = await productoService.crearProducto(res.locals.body)
 
-        res.status(200).json({
+        res.status(201).json({
             msj: 'Se creo correctamente el producto',
-            // producto: productoCreado
+            producto: productoCreado
 
         })
     } catch (err: unknown) {
@@ -54,14 +58,15 @@ export async function crearProducto(
 
 export async function actualizarProducto(
     req: Request, 
-    res: Response<ProductoResponse | {error: string}, ActualizarProductoLocals>) {
+    res: Response<ProductoResponse | ErrorResponse, ActualizarProductoLocals>) {
     try {
         
         const {id} = res.locals.params
         const productoEditado = await productoService.actualizarProducto(id, res.locals.body)
         
         res.status(200).json({
-            msj: 'Se edito correctamente el producto'
+            msj: 'Se edito correctamente el producto',
+            producto: productoEditado
         })
     } catch (err) {
         const message= err instanceof Error ? err.message : 'Error no encontrado'

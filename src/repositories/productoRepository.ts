@@ -1,8 +1,8 @@
-import { CrearProductoBody, ActualizarProductoBody } from '../types/index.js'
+import { CrearProductoBody, ActualizarProductoBody, Producto } from '../types/index.js'
 import { supabase } from './db/supabase.js';
 
 
-export async function crearProducto(producto: CrearProductoBody) {
+export async function crearProducto(producto: CrearProductoBody): Promise<Producto>{
 
     const {data, error} = await supabase
         .from('producto')
@@ -11,6 +11,8 @@ export async function crearProducto(producto: CrearProductoBody) {
             precio: producto.precio,
             tipo_medicion: producto.tipo_medicion
         })
+        .select()
+        .single()
 
     if(error){
         if(error.code === '23505'){
@@ -21,7 +23,7 @@ export async function crearProducto(producto: CrearProductoBody) {
     return data;    
 }
 
-export async function obtenerProductos() {
+export async function obtenerProductos():Promise<Producto[]> {
     const {data, error} = await supabase
     .from('producto')
     .select('*')
@@ -32,7 +34,7 @@ export async function obtenerProductos() {
     return data
 }
 
-export async function actualizarProducto(id:number, producto: ActualizarProductoBody) {
+export async function actualizarProducto(id:number, producto: ActualizarProductoBody): Promise<Producto>{
 
     const {data, error} = await supabase
         .from('producto')
@@ -43,6 +45,8 @@ export async function actualizarProducto(id:number, producto: ActualizarProducto
             activo: producto.activo
         })
         .eq("id", id)
+        .select()
+        .single()
 
         if(error){
             if(error.code === '23505'){
