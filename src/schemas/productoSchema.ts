@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { MEDICIONES } from '../types/index.js'
+import { MEDICIONES } from '../types/common.js'
 
 const productoBaseSchema = z.object({
     nombre: z.string(), 

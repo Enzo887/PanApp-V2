@@ -1,5 +1,5 @@
 import * as productoRepository from '../repositories/productoRepository.js'
-import {CrearProductoBody, ActualizarProductoBody} from '../types/index.js'
+import {CrearProductoBody, ActualizarProductoBody} from '../types/common.js'
 
 // export async function obtenerProducto(id: number){
 //     return productoRepository.obtenerProducto(Number(id));

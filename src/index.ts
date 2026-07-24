@@ -1,5 +1,5 @@
 import express, { type Request, type Response } from 'express';
-import {cuentaRouter} from './routes/cuentaRouter.js'
+import {jornadaRouter} from './routes/jornadaRouter.js'
 import { productoRouter } from './routes/productosRouter.js';
 import "dotenv/config";
 
@@ -14,7 +14,7 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Servidor funcionando 🚀' });
 });
 
-app.use('/cuenta', cuentaRouter);
+app.use('/jornada', jornadaRouter);
 app.use('/productos', productoRouter);
 
 app.listen(PORT, () => {

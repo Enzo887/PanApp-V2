@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import * as productoService from '../services/productoService.js'
-import { Producto, CrearProductoBody, ActualizarProductoBody } from '../types/index.js'
+import { Producto, CrearProductoBody, ActualizarProductoBody } from '../types/common.js'
 
 type ProductoResponse = {
     msj: string;

@@ -1,4 +1,4 @@
-import { CrearProductoBody, ActualizarProductoBody, Producto } from '../types/index.js'
+import { CrearProductoBody, ActualizarProductoBody, Producto } from '../types/common.js'
 import { supabase } from './db/supabase.js';
 
 
