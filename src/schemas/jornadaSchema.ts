@@ -1,13 +1,16 @@
-import { z } from 'zod'
+import { z } from 'zod';
 
-const detallesSchema = z.object({
-    producto_id: z.number().int().positive(),
-    cantidad_ingreso: z.number().nonnegative(),
-    cantidad_egreso: z.number().nonnegative()
-})
+const crearDetallesJornada = z.object({
+  producto_id: z.number().int().positive(),
+  cantidad_ingreso: z.number().nonnegative(),
+  cantidad_egreso: z.number().nonnegative(),
+});
 
-export const jornadaSchema = z.object({
-    fecha: z.iso.date(),
-    detalles: z.array(detallesSchema).min(1)
-})
+export const crearJornada = z.object({
+  fecha: z.iso.date(),
+  detalles: z.array(crearDetallesJornada).min(1),
+});
 
+export const obtenerJornada = z.object({
+  id: z.coerce.number(),
+});

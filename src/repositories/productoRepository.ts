@@ -1,71 +1,85 @@
-import { CrearProductoBody, ActualizarProductoBody, Producto } from '../types/common.js'
+import {
+  CrearProductoBody,
+  ActualizarProductoBody,
+  Producto,
+} from '../types/common.js';
 import { supabase } from './db/supabase.js';
 
-
-export async function crearProducto(producto: CrearProductoBody): Promise<Producto>{
-
-    const {data, error} = await supabase
-        .from('producto')
-        .insert({
-            nombre: producto.nombre,
-            precio: producto.precio,
-            tipo_medicion: producto.tipo_medicion
-        })
-        .select()
-        .single()
-
-    if(error){
-        if(error.code === '23505'){
-            throw new Error(`Ya existe un producto con el nombre '${producto.nombre}'`)
-        }
-        throw new Error(error.message)
-    }
-    return data;    
-}
-
-export async function obtenerProductos():Promise<Producto[]> {
-    const {data, error} = await supabase
+export async function crearProducto(
+  producto: CrearProductoBody
+): Promise<Producto> {
+  const { data, error } = await supabase
     .from('producto')
-    .select('*')
+    .insert({
+      nombre: producto.nombre,
+      precio: producto.precio,
+      tipo_medicion: producto.tipo_medicion,
+    })
+    .select()
+    .single();
 
-    if(error){
-        throw new Error(error.message)
+  if (error) {
+    if (error.code === '23505') {
+      throw new Error(
+        `Ya existe un producto con el nombre '${producto.nombre}'`
+      );
     }
-    return data
+    throw new Error(error.message);
+  }
+  return data;
 }
 
-export async function actualizarProducto(id:number, producto: ActualizarProductoBody): Promise<Producto>{
+export async function obtenerProductos(): Promise<Producto[]> {
+  const { data, error } = await supabase.from('producto').select('*');
 
-    const {data, error} = await supabase
-        .from('producto')
-        .update({
-            nombre: producto.nombre,
-            precio: producto.precio,
-            tipo_medicion: producto.tipo_medicion,
-            activo: producto.activo
-        })
-        .eq("id", id)
-        .select()
-        .single()
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+}
 
-        if(error){
-            if(error.code === '23505'){
-                throw new Error(`Ya existe un producto con el nombre '${producto.nombre}'`)
-            }
-            throw new Error(error.message)
-        }
+export async function actualizarProducto(
+  id: number,
+  producto: ActualizarProductoBody
+): Promise<Producto> {
+  const { data, error } = await supabase
+    .from('producto')
+    .update({
+      nombre: producto.nombre,
+      precio: producto.precio,
+      tipo_medicion: producto.tipo_medicion,
+      activo: producto.activo,
+    })
+    .eq('id', id)
+    .select()
+    .single();
 
-    return data
+  if (error) {
+    if (error.code === '23505') {
+      throw new Error(
+        `Ya existe un producto con el nombre '${producto.nombre}'`
+      );
+    }
+    throw new Error(error.message);
+  }
+
+  return data;
 }
 
 export async function eliminarProducto(id: number) {
+  const { error } = await supabase.from('producto').delete().eq('id', id);
 
-    const {error} = await supabase
-        .from('producto')
-        .delete()
-        .eq('id', id)
-    
-    if(error){
-        throw new Error(error.message)
-    }
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function buscarProductosPorIds(ids: number[]) {
+  const { data, error } = await supabase
+    .from('producto')
+    .select('*')
+    .in('id', ids);
+
+  if (error) throw new Error(error.message);
+  return data;
 }

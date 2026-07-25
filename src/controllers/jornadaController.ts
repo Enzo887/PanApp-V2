@@ -1,35 +1,55 @@
 import { type Request, type Response } from 'express';
-import * as jornadaService from '../services/jornadaService.js'
+import * as jornadaService from '../services/jornadaService.js';
 import { CrearJornadaBody, JornadaDetalles } from '../types/common.js';
 
-type JornadaResponse = {
-  body: CrearJornadaBody
-}
+type CrearJornadaLocals = {
+  body: CrearJornadaBody;
+};
 
-export async function obtenerCuenta(
+type JornadaResponse = {
+  msj: string;
+  jornadaConDetalle: JornadaDetalles;
+};
+
+type ErrorResponse = {
+  error: string;
+};
+
+export async function obtenerJornadaActual(
   req: Request,
-  res: Response
+  res: Response<JornadaResponse | ErrorResponse>
 ) {
-  const { id } = req.params;
-  res.json(`Estas viendo la cuenta de id: ${id}`);
+  try {
+    const jornadaConDetalle = await jornadaService.obtenerCuentaActual();
+    res.status(200).json({
+      msj: 'Se encontro la jornada',
+      jornadaConDetalle,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Error no encontrado';
+    res.status(500).json({
+      error: message,
+    });
+  }
 }
 
 export async function crearJornada(
   req: Request,
-  res: Response<{msj:string, jornadaConDetalle: JornadaDetalles} | {error:string}, JornadaResponse>) {
+  res: Response<JornadaResponse | ErrorResponse, CrearJornadaLocals>
+) {
   try {
-
-    const jornadaConDetalle = await jornadaService.crearJornada(res.locals.body)
+    const jornadaConDetalle = await jornadaService.crearJornada(
+      res.locals.body
+    );
 
     res.status(201).json({
-      msj: "Jornada creada exitosamente",
-      jornadaConDetalle
-    })
-      
+      msj: 'Jornada creada exitosamente',
+      jornadaConDetalle,
+    });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Error no encontrado'
+    const message = err instanceof Error ? err.message : 'Error no encontrado';
     res.status(500).json({
-      error: message
-    }) 
+      error: message,
+    });
   }
 }
