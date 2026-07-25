@@ -2,7 +2,7 @@ import {
   CrearProductoBody,
   ActualizarProductoBody,
   Producto,
-} from '../types/common.js';
+} from '../types/productos.types.js';
 import { supabase } from './db/supabase.js';
 
 export async function crearProducto(

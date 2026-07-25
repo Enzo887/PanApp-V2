@@ -1,4 +1,8 @@
-import { Jornada, CrearJornadaBody, DetalleCompleto } from '../types/common.js';
+import {
+  Jornada,
+  CrearJornadaBody,
+  DetalleCompleto,
+} from '../types/jornada.types.js';
 import { supabase } from './db/supabase.js';
 
 export async function crearJornada(
@@ -32,7 +36,7 @@ export async function crearDetallesJornada(detallesJornada: DetalleCompleto[]) {
   return data;
 }
 
-export async function obtenerCuentaActual() {
+export async function obtenerJornadaActual() {
   const { data, error } = await supabase
     .from('jornada')
     .select('*')

@@ -8,6 +8,12 @@ jornadaRouter.get('/', jornadaController.obtenerJornadaActual);
 
 jornadaRouter.post(
   '/crear',
-  validar(jornadaSchema.crearJornada, 'body'),
+  validar(jornadaSchema.crear, 'body'),
   jornadaController.crearJornada
+);
+
+jornadaRouter.patch(
+  '/editar',
+  validar(jornadaSchema.id, 'params'),
+  validar(jornadaSchema.editar, 'body')
 );

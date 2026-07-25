@@ -1,22 +1,28 @@
-import * as productoRepository from '../repositories/productoRepository.js'
-import {CrearProductoBody, ActualizarProductoBody} from '../types/common.js'
+import * as productoRepository from '../repositories/productoRepository.js';
+import {
+  CrearProductoBody,
+  ActualizarProductoBody,
+} from '../types/productos.types.js';
 
 // export async function obtenerProducto(id: number){
 //     return productoRepository.obtenerProducto(Number(id));
 // }
 
 export async function crearProducto(producto: CrearProductoBody) {
-    return await productoRepository.crearProducto(producto);
+  return await productoRepository.crearProducto(producto);
 }
 
 export async function obtenerProductos() {
-    return await productoRepository.obtenerProductos();
+  return await productoRepository.obtenerProductos();
 }
 
-export async function actualizarProducto(id:number, producto: ActualizarProductoBody) {
-    return await productoRepository.actualizarProducto(id, producto)
+export async function actualizarProducto(
+  id: number,
+  producto: ActualizarProductoBody
+) {
+  return await productoRepository.actualizarProducto(id, producto);
 }
 
 export async function eliminarProducto(id: number) {
-    return await productoRepository.eliminarProducto(id)
+  return await productoRepository.eliminarProducto(id);
 }

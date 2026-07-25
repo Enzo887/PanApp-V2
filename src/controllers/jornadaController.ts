@@ -1,6 +1,6 @@
 import { type Request, type Response } from 'express';
 import * as jornadaService from '../services/jornadaService.js';
-import { CrearJornadaBody, JornadaDetalles } from '../types/common.js';
+import { CrearJornadaBody, JornadaDetalles } from '../types/jornada.types.js';
 
 type CrearJornadaLocals = {
   body: CrearJornadaBody;
@@ -20,7 +20,7 @@ export async function obtenerJornadaActual(
   res: Response<JornadaResponse | ErrorResponse>
 ) {
   try {
-    const jornadaConDetalle = await jornadaService.obtenerCuentaActual();
+    const jornadaConDetalle = await jornadaService.obtenerJornadaActual();
     res.status(200).json({
       msj: 'Se encontro la jornada',
       jornadaConDetalle,

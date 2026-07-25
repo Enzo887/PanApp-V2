@@ -1,9 +1,11 @@
-import { CrearJornadaBody } from '../types/common.js';
+import { CrearJornadaBody, Jornada } from '../types/jornada.types.js';
 import * as jornadaRepository from '../repositories/jornadaRepository.js';
 import { buscarProductosPorIds } from '../repositories/productoRepository.js';
 
-export async function obtenerCuentaActual() {
-  const jornadaActual = await jornadaRepository.obtenerCuentaActual();
+let jornadaActual: Jornada;
+
+export async function obtenerJornadaActual() {
+  jornadaActual = await jornadaRepository.obtenerJornadaActual();
 
   const DetallesJornadaActual =
     await jornadaRepository.obtenerDetallesDeJornada(jornadaActual.id);
@@ -23,6 +25,10 @@ export async function obtenerCuentaActual() {
 }
 
 export async function crearJornada(jornada: CrearJornadaBody) {
+  if (jornadaActual) {
+    throw new Error('Hay una jornada abierta');
+  }
+
   const jornadaCreada = await jornadaRepository.crearJornada(jornada);
 
   const idsProductos = jornada.detalles.map((d) => d.producto_id);
