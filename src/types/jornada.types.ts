@@ -1,6 +1,8 @@
 import { Producto } from './productos.types.js';
+import {z} from 'zod'
+import { editar, editarDetallesJornada } from '../schemas/jornadaSchema.js';
 
-export interface DetallesJornada {
+export interface Detalles {
   id: number;
   jornada_id: number;
   producto_id: number;
@@ -9,17 +11,22 @@ export interface DetallesJornada {
   precio_unitario: number;
 }
 
-export type DetalleCompleto = Omit<DetallesJornada, 'id'>;
-export type ObtenerDetalleCompleto = Omit<
-  DetallesJornada,
-  'id' | 'producto_id'
+export type CrearDetalles = Omit<
+  Detalles,
+  'id' | 'jornada_id' | 'precio_unitario'
+>;
+
+//Repository
+export type NuevoDetalle = Omit<Detalles, 'id'>;
+
+//saco producto_id porque mando a producto como objeto con sus datos
+export type DetalleCreado = Omit<
+  Detalles,
+  'producto_id'
 > & {
   producto: Producto;
 };
-export type CrearDetallesBody = Omit<
-  DetallesJornada,
-  'id' | 'jornada_id' | 'precio_unitario'
->;
+
 
 export const ESTADOS = ['abierta', 'cerrada'] as const;
 
@@ -31,10 +38,13 @@ export interface Jornada {
   fecha: string;
 }
 
-export type CrearJornadaBody = Omit<Jornada, 'id' | 'estado'> & {
-  detalles: CrearDetallesBody[];
+export type NuevaJornada = Omit<Jornada, 'id' | 'estado'> & {
+  detalles: CrearDetalles[];
 };
 
-export type JornadaDetalles = Jornada & {
-  detalles: ObtenerDetalleCompleto[];
+export type JornadaDetallesCreado = Jornada & {
+  detalles: DetalleCreado[];
 };
+
+export type EditarJornadaBody = z.infer<typeof editar>;
+export type EditarDetalleJornadaBody = z.infer<typeof editarDetallesJornada>;

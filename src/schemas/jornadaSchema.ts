@@ -16,7 +16,7 @@ export const id = z.object({
   id: z.coerce.number(),
 });
 
-const editarDetallesJornada = z.object({
+export const editarDetallesJornada = z.object({
   id: z.number().int().positive(),
   cantidad_ingreso: z.number().nonnegative().optional(),
   cantidad_egreso: z.number().nonnegative().optional(),

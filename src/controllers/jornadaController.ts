@@ -1,14 +1,14 @@
 import { type Request, type Response } from 'express';
 import * as jornadaService from '../services/jornadaService.js';
-import { CrearJornadaBody, JornadaDetalles } from '../types/jornada.types.js';
+import { NuevaJornada, JornadaDetallesCreado } from '../types/jornada.types.js';
 
 type CrearJornadaLocals = {
-  body: CrearJornadaBody;
+  body: NuevaJornada;
 };
 
 type JornadaResponse = {
   msj: string;
-  jornadaConDetalle: JornadaDetalles;
+  jornadaConDetalle: JornadaDetallesCreado;
 };
 
 type ErrorResponse = {
@@ -53,3 +53,23 @@ export async function crearJornada(
     });
   }
 }
+
+// export async function actualizarJornada(
+//   req: Request, 
+//   res: Response<JornadaResponse | ErrorResponse>
+// ) {
+//   try {
+
+//     const jornadaActualizada = await jornadaService.actualizarJornada(res.locals.body)
+//     res.status(200).json({
+//       msj: 'Se edito correctamente',
+//       jornadaActualizada
+//     })
+    
+//   } catch (err) {
+//     const message = err instanceof Error ? err.message : 'Error no encontrado'
+//     res.status(500).json({
+//       error: message
+//     })
+//   }
+// }

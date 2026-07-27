@@ -1,12 +1,12 @@
 import {
   Jornada,
-  CrearJornadaBody,
-  DetalleCompleto,
+  NuevaJornada,
+  NuevoDetalle,
 } from '../types/jornada.types.js';
 import { supabase } from './db/supabase.js';
 
 export async function crearJornada(
-  jornada: CrearJornadaBody
+  jornada: NuevaJornada
 ): Promise<Jornada> {
   const { data, error } = await supabase
     .from('jornada')
@@ -23,7 +23,7 @@ export async function crearJornada(
   return data;
 }
 
-export async function crearDetallesJornada(detallesJornada: DetalleCompleto[]) {
+export async function crearDetallesJornada(detallesJornada: NuevoDetalle[]) {
   const { data, error } = await supabase
     .from('detalle_jornada')
     .insert(detallesJornada)

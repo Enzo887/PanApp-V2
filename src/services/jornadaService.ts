@@ -1,4 +1,4 @@
-import { CrearJornadaBody, Jornada } from '../types/jornada.types.js';
+import { NuevaJornada, Jornada } from '../types/jornada.types.js';
 import * as jornadaRepository from '../repositories/jornadaRepository.js';
 import { buscarProductosPorIds } from '../repositories/productoRepository.js';
 
@@ -24,7 +24,7 @@ export async function obtenerJornadaActual() {
   };
 }
 
-export async function crearJornada(jornada: CrearJornadaBody) {
+export async function crearJornada(jornada: NuevaJornada) {
   if (jornadaActual) {
     throw new Error('Hay una jornada abierta');
   }
@@ -60,3 +60,8 @@ export async function crearJornada(jornada: CrearJornadaBody) {
   });
   return { ...jornadaCreada, detalles: DetallesJornada };
 }
+
+
+// export async function actualizarJornada(jornada) {
+  
+// }
