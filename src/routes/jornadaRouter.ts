@@ -13,7 +13,7 @@ jornadaRouter.post(
 );
 
 jornadaRouter.patch(
-  '/editar',
+  '/editar/:id',
   validar(jornadaSchema.id, 'params'),
   validar(jornadaSchema.editar, 'body')
 );
