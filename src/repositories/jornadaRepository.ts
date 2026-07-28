@@ -20,6 +20,9 @@ export async function crearJornada(
     .single();
 
   if (error) {
+    if (error.code === '23505') {
+      throw new Error(`Ya existe una jornada abierta`);
+    }
     throw new Error(error.message);
   }
 
@@ -74,9 +77,12 @@ export async function obtenerDetallesDeJornada(idJornada: number) {
     .select()
     .single()
     
-    if(error){
-      throw new Error(error.message)
+  if (error) {
+    if (error.code === '23505') {
+      throw new Error(`Ya existe una jornada abierta`);
     }
+    throw new Error(error.message);
+  }
 
     return data
   }

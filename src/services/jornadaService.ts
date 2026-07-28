@@ -63,7 +63,6 @@ export async function crearJornada(jornada: NuevaJornada) {
 
 
 export async function actualizarJornada(idJornada: number,jornada: ActualizarJornadaDetalles): Promise<JornadaDetallesActualizado> {
-  
   const {detalles, ...camposJornada} = jornada
   let jornadaActualizada: ActualizarJornada | undefined;
   let detallesActualizados: ActualizarDetalle[] | undefined;
