@@ -15,5 +15,6 @@ jornadaRouter.post(
 jornadaRouter.patch(
   '/editar/:id',
   validar(jornadaSchema.id, 'params'),
-  validar(jornadaSchema.editar, 'body')
+  validar(jornadaSchema.editar, 'body'),
+  jornadaController.actualizarJornada
 );

@@ -1,14 +1,24 @@
 import { type Request, type Response } from 'express';
 import * as jornadaService from '../services/jornadaService.js';
-import { NuevaJornada, JornadaDetallesCreado } from '../types/jornada.types.js';
+import { NuevaJornada, JornadaDetallesCreado, ActualizarJornada, JornadaDetallesActualizado } from '../types/jornada.types.js';
 
 type CrearJornadaLocals = {
   body: NuevaJornada;
 };
 
+type ActualizarJornadaLocals = {
+  params: {id: number}
+  body: ActualizarJornada;
+};
+
 type JornadaResponse = {
   msj: string;
   jornadaConDetalle: JornadaDetallesCreado;
+};
+
+type JornadaResponseActualizar = {
+  msj: string;
+  jornadaConDetalle: JornadaDetallesActualizado;
 };
 
 type ErrorResponse = {
@@ -54,22 +64,24 @@ export async function crearJornada(
   }
 }
 
-// export async function actualizarJornada(
-//   req: Request, 
-//   res: Response<JornadaResponse | ErrorResponse>
-// ) {
-//   try {
+export async function actualizarJornada(
+  req: Request, 
+  res: Response<JornadaResponseActualizar | ErrorResponse, ActualizarJornadaLocals>
+) {
+  try {
 
-//     const jornadaActualizada = await jornadaService.actualizarJornada(res.locals.body)
-//     res.status(200).json({
-//       msj: 'Se edito correctamente',
-//       jornadaActualizada
-//     })
+    const {id} = res.locals.params
+
+    const jornadaActualizada = await jornadaService.actualizarJornada(id,res.locals.body)
+    res.status(200).json({
+      msj: 'Se edito correctamente',
+      jornadaConDetalle: jornadaActualizada
+    })
     
-//   } catch (err) {
-//     const message = err instanceof Error ? err.message : 'Error no encontrado'
-//     res.status(500).json({
-//       error: message
-//     })
-//   }
-// }
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Error no encontrado'
+    res.status(500).json({
+      error: message
+    })
+  }
+}

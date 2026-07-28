@@ -1,4 +1,4 @@
-import { NuevaJornada, Jornada } from '../types/jornada.types.js';
+import { NuevaJornada, Jornada, ActualizarJornadaDetalles, ActualizarJornada, ActualizarDetalle, JornadaDetallesActualizado } from '../types/jornada.types.js';
 import * as jornadaRepository from '../repositories/jornadaRepository.js';
 import { buscarProductosPorIds } from '../repositories/productoRepository.js';
 
@@ -62,6 +62,23 @@ export async function crearJornada(jornada: NuevaJornada) {
 }
 
 
-// export async function actualizarJornada(jornada) {
+export async function actualizarJornada(idJornada: number,jornada: ActualizarJornadaDetalles): Promise<JornadaDetallesActualizado> {
   
-// }
+  const {detalles, ...camposJornada} = jornada
+  let jornadaActualizada: ActualizarJornada | undefined;
+  let detallesActualizados: ActualizarDetalle[] | undefined;
+
+  const huboCambiosJornada = camposJornada.estado !== undefined || camposJornada.fecha !== undefined
+
+  if(huboCambiosJornada){
+    jornadaActualizada = await jornadaRepository.actualizarJornada(idJornada, camposJornada)
+  }
+
+  if (detalles && detalles.length > 0) {
+    detallesActualizados = await jornadaRepository.actualizarDetalles(detalles);
+  }
+  return {
+  ...jornadaActualizada,
+  detalles: detallesActualizados
+}
+}

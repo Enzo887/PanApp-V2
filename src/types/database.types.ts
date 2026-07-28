@@ -103,7 +103,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      actualizar_detalles_jornada: {
+        Args: { cambios: Json }
+        Returns: {
+          cantidad_egreso: number
+          cantidad_ingreso: number
+          id: number
+          jornada_id: number
+          precio_unitario: number
+          producto_id: number
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "detalle_jornada"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       estado_jornada: "abierta" | "cerrada"

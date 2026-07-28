@@ -46,5 +46,9 @@ export type JornadaDetallesCreado = Jornada & {
   detalles: DetalleCreado[];
 };
 
-export type EditarJornadaBody = z.infer<typeof editar>;
-export type EditarDetalleJornadaBody = z.infer<typeof editarDetallesJornada>;
+export type ActualizarJornadaDetalles = z.infer<typeof editar>;
+export type ActualizarJornada = Partial<Omit<Jornada, 'id'>>
+export type ActualizarDetalle = z.infer<typeof editarDetallesJornada>;
+export type JornadaDetallesActualizado = Partial<Jornada> & {
+  detalles?: ActualizarDetalle[];
+};
