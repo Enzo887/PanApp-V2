@@ -74,10 +74,40 @@ export async function actualizarJornada(idJornada: number,jornada: ActualizarJor
   }
 
   if (detalles && detalles.length > 0) {
-    detallesActualizados = await jornadaRepository.actualizarDetalles(detalles);
+    const detallesConPrecio =  await resolverPreciosDetalles(detalles)
+    detallesActualizados = await jornadaRepository.actualizarDetalles(detallesConPrecio);
   }
   return {
   ...jornadaActualizada,
   detalles: detallesActualizados
+  }
 }
+
+async function resolverPreciosDetalles(detalles: ActualizarDetalle[]): Promise<ActualizarDetalle[]> {
+  const idsProductos = detalles
+    .filter((d) => d.producto_id !== undefined)
+    .map((d) => d.producto_id as number);
+
+  if (idsProductos.length === 0) {
+    return detalles;
+  }
+
+  const productos = await buscarProductosPorIds(idsProductos);
+  const mapaProductos = new Map(productos.map((p) => [p.id, p]));
+
+  return detalles.map((detalle) => {
+    if (detalle.producto_id === undefined) {
+      return detalle;
+    }
+
+    const producto = mapaProductos.get(detalle.producto_id);
+    if (!producto) {
+      throw new Error(`Producto ${detalle.producto_id} no encontrado`);
+    }
+
+    return {
+      ...detalle,
+      precio_unitario: producto.precio,
+    };
+  });
 }
