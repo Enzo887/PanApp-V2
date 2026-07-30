@@ -21,7 +21,7 @@ export async function crearJornada(
 
   if (error) {
     if (error.code === '23505') {
-      throw new Error(`Ya existe una jornada abierta`);
+      throw new Error(`Ya existe una jornada con esa fecha`);
     }
     throw new Error(error.message);
   }
@@ -47,7 +47,7 @@ export async function obtenerJornadaActual() {
     .from('jornada')
     .select('*')
     .eq('estado', 'abierta')
-    .single();
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);

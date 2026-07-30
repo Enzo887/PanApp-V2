@@ -1,11 +1,14 @@
 import { NuevaJornada, Jornada, ActualizarJornadaDetalles, ActualizarJornada, ActualizarDetalle, JornadaDetallesActualizado } from '../types/jornada.types.js';
 import * as jornadaRepository from '../repositories/jornadaRepository.js';
 import { buscarProductosPorIds } from '../repositories/productoRepository.js';
-
-let jornadaActual: Jornada;
+import { medicion } from '../types/productos.types.js';
 
 export async function obtenerJornadaActual() {
-  jornadaActual = await jornadaRepository.obtenerJornadaActual();
+  const jornadaActual = await jornadaRepository.obtenerJornadaActual();
+
+  if(!jornadaActual){
+    throw new Error("No hay ninguna jornada abierta")
+  }
 
   const DetallesJornadaActual =
     await jornadaRepository.obtenerDetallesDeJornada(jornadaActual.id);
@@ -25,21 +28,37 @@ export async function obtenerJornadaActual() {
 }
 
 export async function crearJornada(jornada: NuevaJornada) {
+  const jornadaActual = await jornadaRepository.obtenerJornadaActual();
+
   if (jornadaActual) {
-    throw new Error('Hay una jornada abierta');
+    throw new Error('No se puede crear porque hay una jornada abierta');
   }
 
   const jornadaCreada = await jornadaRepository.crearJornada(jornada);
 
   const idsProductos = jornada.detalles.map((d) => d.producto_id);
   const productos = await buscarProductosPorIds(idsProductos);
-  const precioPorProducto = new Map(productos.map((p) => [p.id, p.precio]));
+  const mapaProductos = new Map(productos.map((p) => [p.id, p]));
 
   const detallesCompletos = jornada.detalles.map((detalle) => {
-    const precio = precioPorProducto.get(detalle.producto_id);
+    const producto = mapaProductos.get(detalle.producto_id);
+    if (!producto) {
+      throw new Error(`Producto ${detalle.producto_id} no encontrado`);
+    }
+
+    const precio = producto?.precio
     if (precio === undefined) {
       throw new Error(`Producto ${detalle.producto_id} no existe`);
     }
+    
+    if (!producto.activo) {
+      throw new Error(
+        `El producto '${producto.nombre}' está deshabilitado`
+      );
+    }
+
+    validarCantidadSegunTipo(detalle.cantidad_ingreso, producto.tipo_medicion, producto.nombre, 'cantidad_ingreso');
+    validarCantidadSegunTipo(detalle.cantidad_egreso, producto.tipo_medicion, producto.nombre, 'cantidad_egreso');
 
     return {
       ...detalle,
@@ -105,9 +124,32 @@ async function resolverPreciosDetalles(detalles: ActualizarDetalle[]): Promise<A
       throw new Error(`Producto ${detalle.producto_id} no encontrado`);
     }
 
+    if (!producto.activo) {
+      throw new Error(
+        `El producto '${producto.nombre}' está deshabilitado`
+      );
+    }
+    validarCantidadSegunTipo(detalle.cantidad_ingreso, producto.tipo_medicion, producto.nombre, 'cantidad_ingreso');
+    validarCantidadSegunTipo(detalle.cantidad_egreso, producto.tipo_medicion, producto.nombre, 'cantidad_egreso');
+
+    
     return {
       ...detalle,
       precio_unitario: producto.precio,
     };
   });
+}
+function validarCantidadSegunTipo(
+  cantidad: number | undefined,
+  tipoMedicion: medicion,
+  nombreProducto: string,
+  campo: 'cantidad_ingreso' | 'cantidad_egreso'
+) {
+  if (cantidad === undefined) return;
+
+  if (tipoMedicion === 'unidad' && !Number.isInteger(cantidad)) {
+    throw new Error(
+      `El producto '${nombreProducto}' se mide por unidad; '${campo}' no admite decimales (recibido: ${cantidad})`
+    );
+  }
 }

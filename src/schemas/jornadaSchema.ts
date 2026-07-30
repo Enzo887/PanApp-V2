@@ -21,10 +21,16 @@ export const editarDetallesJornada = z.object({
   cantidad_ingreso: z.number().nonnegative().optional(),
   cantidad_egreso: z.number().nonnegative().optional(),
   producto_id: z.number().int().positive().optional(),
-}).refine(
+}).strict().refine(
   (d) => d.cantidad_ingreso !== undefined || d.cantidad_egreso !== undefined || d.producto_id !== undefined,
   { message: "Cada detalle debe traer al menos un campo a modificar además del id" }
-);
+).refine(
+  (d) => d.producto_id === undefined || d.cantidad_ingreso !== undefined || d.cantidad_egreso !== undefined,
+  {
+    message: "Si se cambia el Producto, debe reenviarse cantidad_ingreso y/o cantidad_egreso",
+    path: ['producto_id'],
+  }
+)
 
 export const editar = z.object({
   fecha: z.iso.date().optional(),

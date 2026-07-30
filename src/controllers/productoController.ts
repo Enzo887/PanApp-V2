@@ -95,7 +95,7 @@ export async function eliminarProducto(
   try {
     const { id } = res.locals.params;
     await productoService.eliminarProducto(id);
-    res.status(204).json({
+    res.status(200).json({
       msj: 'Producto eliminado correctamente',
     });
   } catch (err) {

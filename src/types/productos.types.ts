@@ -12,8 +12,8 @@ export interface Producto {
   tipo_medicion: medicion;
   activo: boolean;
 }
-export type CrearProductoBody = Omit<Producto, 'id' | 'activo'>;
-export type ActualizarProductoBody = Partial<Omit<Producto, 'id'>>;
+// export type CrearProductoBody = Omit<Producto, 'id' | 'activo'>;
+// export type ActualizarProductoBody = Partial<Omit<Producto, 'id'>>;
 
-// export type CrearProductoBody2 = z.infer<typeof crear>
-// export type ActualizarProductoBody = z.infer<typeof actualizar>
+export type CrearProductoBody = z.infer<typeof crear>
+export type ActualizarProductoBody = z.infer<typeof actualizar>
