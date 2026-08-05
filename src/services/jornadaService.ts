@@ -34,13 +34,12 @@ export async function crearJornada(jornada: NuevaJornada) {
     throw new Error('No se puede crear porque hay una jornada abierta');
   }
 
-  const jornadaCreada = await jornadaRepository.crearJornada(jornada);
 
   const idsProductos = jornada.detalles.map((d) => d.producto_id);
   const productos = await buscarProductosPorIds(idsProductos);
   const mapaProductos = new Map(productos.map((p) => [p.id, p]));
 
-  const detallesCompletos = jornada.detalles.map((detalle) => {
+  const detallesValidados = jornada.detalles.map((detalle) => {
     const producto = mapaProductos.get(detalle.producto_id);
     if (!producto) {
       throw new Error(`Producto ${detalle.producto_id} no encontrado`);
@@ -62,10 +61,16 @@ export async function crearJornada(jornada: NuevaJornada) {
 
     return {
       ...detalle,
-      jornada_id: jornadaCreada.id,
       precio_unitario: precio,
     };
   });
+
+  const jornadaCreada = await jornadaRepository.crearJornada(jornada);
+
+  const detallesCompletos = detallesValidados.map(d => ({
+    ...d,
+    jornada_id: jornadaCreada.id,
+  }))
 
   const detalles =
     await jornadaRepository.crearDetallesJornada(detallesCompletos);
